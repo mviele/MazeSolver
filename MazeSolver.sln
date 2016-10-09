@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeSolver", "ConsoleApplication1\MazeSolver.csproj", "{AB9B4E02-2F88-4C5F-87AD-2A80DD635AB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeSolver", "MazeSolver\MazeSolver.csproj", "{AB9B4E02-2F88-4C5F-87AD-2A80DD635AB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

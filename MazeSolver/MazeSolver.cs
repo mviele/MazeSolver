@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace MazeSolver
 {
-    class Program
+    class MazeSolver
     {
         static void Main(string[] args)
         {
