@@ -45,7 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Coordinate.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="Maze.cs" />
     <Compile Include="MazeSolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

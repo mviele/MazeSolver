@@ -9,56 +9,27 @@ namespace MazeSolver
     class Maze
     {
         private Bitmap mazeImage;
-        private List<Coordinate> startPixels;
-        private List<Coordinate> finishPixels;
+        private Node[,] mazeArray;
+        private List<Node> startPixels;
+        private List<Node> finishPixels;
+        private Int32 finishX, finishY;
 
         public Maze(Bitmap mazeImage)
         {
             this.mazeImage = mazeImage;
-            startPixels = new List<Coordinate>();
-            finishPixels = new List<Coordinate>();
+            mazeArray = new Node[mazeImage.Height, mazeImage.Width];
+            this.buildMazeArray();
+            startPixels = new List<Node>();
+            finishPixels = new List<Node>();
         }
+
 
         public void solve()
         {
-            findStart();
-            findFinish();
+            
         }
 
-        /// <summary>
-        /// The findStart method searches through the mazeImage bitmap to find all the
-        /// instances of red pixels, and places their coordinates in an List.
-        /// </summary>
-        private void findStart()
-        {
-            for(int i = 0; i < mazeImage.Height; i++)
-            {
-                for(int j = 0; j < mazeImage.Width; j++)
-                {
-                    if(mazeImage.GetPixel(i, j).R == 255 && mazeImage.GetPixel(i, j).G == 0 && mazeImage.GetPixel(i, j).B == 0)
-                    {
-                        if (hasMove(i, j))
-                        {
-                            startPixels.Add(new Coordinate(i, j));
-                        }
-                    }
-                }
-            }
-            //Start Debugging apparati
-            Console.Write("[START POINTS]\n");
-            for (int x = 0; x < startPixels.Count; x++)
-            {
-                Console.Write(startPixels[x].ToString() + "\n");
-            }
-            Console.Write("\n");
-            //End Debugging apparati
-        }
-
-        /// <summary>
-        /// The findFinish method searches through the mazeImage bitmap to find all the
-        /// instances of blue pixels, and places their coordinates in an List.
-        /// </summary>
-        private void findFinish()
+        private void findFinishPixels()
         {
             for (int i = 0; i < mazeImage.Height; i++)
             {
@@ -68,21 +39,51 @@ namespace MazeSolver
                     {
                         if (hasMove(i, j))
                         {
-                            finishPixels.Add(new Coordinate(i, j));
+                            finishX = i;
+                            finishY = j;
+                            return;
                         }
                     }
                 }
             }
-
-            //Start Debugging apparati
-            Console.Write("[FINISH POINTS]\n");
-            for (int x = 0; x < finishPixels.Count; x++)
-            {
-                Console.Write(finishPixels[x].ToString() + "\n");
-            }
-            Console.Write("\n");
-            //End Debugging apparati
         }
+
+        private void buildMazeArray()
+        {
+            for (int i = 0; i < mazeImage.Height; i++)
+            {
+                for (int j = 0; j < mazeImage.Width; j++)
+                {
+                    //This is true if the pixel is red
+                    if (mazeImage.GetPixel(i, j).R == 255 && mazeImage.GetPixel(i, j).G == 0 && mazeImage.GetPixel(i, j).B == 0)
+                    {
+                        Node n = new Node(2, i, j, finishX, finishY);
+                        mazeArray[i, j] = n;
+                        if (hasMove(i, j))
+                        {
+                            //We want this so we can initially populate the open queue
+                            startPixels.Add(n);
+                        }
+                    }
+                    //This is true if the pixel is blue
+                    else if (mazeImage.GetPixel(i, j).R == 0 && mazeImage.GetPixel(i, j).G == 0 && mazeImage.GetPixel(i, j).B == 255)
+                    {
+                        mazeArray[i, j] = new Node(3, i, j, finishX, finishY);
+                    }
+                    //This is true if the pixel is black
+                    else if (mazeImage.GetPixel(i, j).R == 0 && mazeImage.GetPixel(i, j).G == 0 && mazeImage.GetPixel(i, j).B == 0)
+                    {
+                        mazeArray[i, j] = new Node(1, i, j, finishX, finishY);
+                    }
+                    //This is true if the pixel is any other color (should all be white)
+                    else
+                    {
+                        mazeArray[i, j] = new Node(0, i, j, finishX, finishY);
+                    }
+                }
+            }
+        }
+
 
         private bool hasMove(Int32 x, Int32 y)
         {
