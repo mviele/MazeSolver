@@ -7,8 +7,11 @@ namespace MazeSolver
 {
     class Node
     {
+        private Int32 parentX { get; set; }
+        private Int32 parentY { get; set; }
         private byte cellType { get; }
-        private Int32 score { get; }
+        private Int32 score { get; set; }
+        private bool visited { get; set; }
 
         public Node(byte cellType, Int32 this_x, Int32 this_y, Int32 goal_x, Int32 goal_y)
         {
@@ -25,6 +28,7 @@ namespace MazeSolver
             {
                 this.score = Math.Abs(this_x - goal_x) + Math.Abs(this_y - goal_y);
             }
+            visited = false;
         }
     }
 }

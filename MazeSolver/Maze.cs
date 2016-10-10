@@ -11,16 +11,14 @@ namespace MazeSolver
         private Bitmap mazeImage;
         private Node[,] mazeArray;
         private List<Node> startPixels;
-        private List<Node> finishPixels;
         private Int32 finishX, finishY;
 
         public Maze(Bitmap mazeImage)
         {
             this.mazeImage = mazeImage;
             mazeArray = new Node[mazeImage.Height, mazeImage.Width];
-            this.buildMazeArray();
             startPixels = new List<Node>();
-            finishPixels = new List<Node>();
+            this.buildMazeArray();
         }
 
 
