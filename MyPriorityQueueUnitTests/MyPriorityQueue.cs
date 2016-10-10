@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MazeSolver
+namespace MyPriorityQueueUnitTests
 {
     class MyPriorityQueue<T> where T: IComparable
     {
@@ -22,13 +22,13 @@ namespace MazeSolver
             return false;
         }
 
-        public void Enqueue(T t)
-        {
+        public void Enqueue (T t)
+        {  
             LinkedListNode<T> currNode = list.First;
             bool added = false;
             while (currNode != null && !added)
             {
-                if (currNode.Value.CompareTo(t) > 0)
+                if(currNode.Value.CompareTo(t) > 0)
                 {
                     list.AddBefore(currNode, t);
                     added = true;

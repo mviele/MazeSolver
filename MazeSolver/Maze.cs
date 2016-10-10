@@ -10,21 +10,159 @@ namespace MazeSolver
     {
         private Bitmap mazeImage;
         private Node[,] mazeArray;
-        private List<Node> startPixels;
+        private List<Int32> startPixelsX;
+        private List<Int32> startPixelsY;
         private Int32 finishX, finishY;
 
         public Maze(Bitmap mazeImage)
         {
             this.mazeImage = mazeImage;
             mazeArray = new Node[mazeImage.Height, mazeImage.Width];
-            startPixels = new List<Node>();
+            startPixelsX = new List<Int32>();
+            startPixelsY = new List<Int32>();
+            this.findFinishPixels();
             this.buildMazeArray();
         }
 
 
-        public void solve()
+        public Bitmap solve()
         {
-            
+            MyPriorityQueue <Node> open = new MyPriorityQueue<Node>();
+            for(int x = 0; x < startPixelsX.Count; x++)
+            {
+                Node node = mazeArray[startPixelsX.ElementAt(x), startPixelsY.ElementAt(x)];
+                node.visited = true;
+                node.steps = 0;
+                node.parentX = -1;
+                node.parentY = -1;
+                open.Enqueue(node);
+            }
+
+            Node end = null;
+            Node n;
+            while (!open.isEmpty())
+            {
+                n = open.Dequeue();
+                //check cell to the left
+                if(n.x - 1 >= 0)
+                {
+                    //Found a finishing node, so now we finish
+                    if (mazeArray[n.x - 1, n.y].cellType == 3)
+                    {
+                        mazeArray[n.x - 1, n.y].parentX = n.x;
+                        mazeArray[n.x - 1, n.y].parentY = n.y;
+                        end = mazeArray[n.x - 1, n.y];
+                        break;
+                    }
+                    //Found a white pixel we haven't visited yet, update it's info and add it to the queue
+                    else if (mazeArray[n.x - 1, n.y].cellType == 0 && !mazeArray[n.x - 1, n.y].visited)
+                    {
+                        mazeArray[n.x - 1, n.y].visited = true;
+                        mazeArray[n.x - 1, n.y].parentX = n.x;
+                        mazeArray[n.x - 1, n.y].parentY = n.y;
+                        mazeArray[n.x - 1, n.y].steps = n.steps + 1;
+                        mazeArray[n.x - 1, n.y].score += n.steps;
+                        open.Enqueue(mazeArray[n.x - 1, n.y]);
+                    }
+                }
+                //check cell to the right
+                if (n.x + 1 < mazeImage.Height)
+                {
+                    //Found a finishing node, so now we finish
+                    if (mazeArray[n.x + 1, n.y].cellType == 3)
+                    {
+                        mazeArray[n.x + 1, n.y].parentX = n.x;
+                        mazeArray[n.x + 1, n.y].parentY = n.y;
+                        end = mazeArray[n.x + 1, n.y];
+                        break;
+                    }
+                    //Found a white pixel we haven't visited yet, update it's info and add it to the queue
+                    else if (mazeArray[n.x + 1, n.y].cellType == 0 && !mazeArray[n.x + 1, n.y].visited)
+                    {
+                        mazeArray[n.x + 1, n.y].visited = true;
+                        mazeArray[n.x + 1, n.y].parentX = n.x;
+                        mazeArray[n.x + 1, n.y].parentY = n.y;
+                        mazeArray[n.x + 1, n.y].steps = n.steps + 1;
+                        mazeArray[n.x + 1, n.y].score += n.steps;
+                        open.Enqueue(mazeArray[n.x + 1, n.y]);
+                    }
+                }
+                //check cell above
+                if (n.y - 1 >= 0)
+                {
+                    //Found a finishing node, so now we finish
+                    if (mazeArray[n.x, n.y - 1].cellType == 3)
+                    {
+                        mazeArray[n.x, n.y - 1].parentX = n.x;
+                        mazeArray[n.x, n.y - 1].parentY = n.y;
+                        end = mazeArray[n.x, n.y - 1];
+                        break;
+                    }
+                    //Found a white pixel we haven't visited yet, update it's info and add it to the queue
+                    else if (mazeArray[n.x, n.y - 1].cellType == 0 && !mazeArray[n.x, n.y - 1].visited)
+                    {
+                        mazeArray[n.x, n.y - 1].visited = true;
+                        mazeArray[n.x, n.y - 1].parentX = n.x;
+                        mazeArray[n.x, n.y - 1].parentY = n.y;
+                        mazeArray[n.x, n.y - 1].steps = n.steps + 1;
+                        mazeArray[n.x, n.y - 1].score += n.steps;
+                        open.Enqueue(mazeArray[n.x, n.y - 1]);
+                    }
+                }
+                //check cell above
+                if (n.y + 1 < mazeImage.Width)
+                {
+                    //Found a finishing node, so now we finish
+                    if (mazeArray[n.x, n.y + 1].cellType == 3)
+                    {
+                        mazeArray[n.x, n.y + 1].parentX = n.x;
+                        mazeArray[n.x, n.y + 1].parentY = n.y;
+                        end = mazeArray[n.x, n.y + 1];
+                        break;
+                    }
+                    //Found a white pixel we haven't visited yet, update it's info and add it to the queue
+                    else if (mazeArray[n.x, n.y + 1].cellType == 0 && !mazeArray[n.x, n.y + 1].visited)
+                    {
+                        mazeArray[n.x, n.y + 1].visited = true;
+                        mazeArray[n.x, n.y + 1].parentX = n.x;
+                        mazeArray[n.x, n.y + 1].parentY = n.y;
+                        mazeArray[n.x, n.y + 1].steps = n.steps + 1;
+                        mazeArray[n.x, n.y + 1].score += n.steps;
+                        open.Enqueue(mazeArray[n.x, n.y + 1]);
+                    }
+                }
+            }
+
+            if(end != null)
+            {
+                this.printSolution(end.x, end.y);
+                return mazeImage;
+            }
+            else
+            {
+                throw new Exception("No Solution Found");
+            }
+        }
+
+        private void printSolution(Int32 x, Int32 y)
+        {
+            Node currNode = mazeArray[x, y];
+            while (true)
+            {
+                if (currNode.cellType == 0)
+                {
+                    mazeImage.SetPixel(x, y, Color.Lime);
+                    currNode = mazeArray[currNode.parentX, currNode.parentY];
+                }
+                else if (currNode.parentX >= 0 && currNode.parentY >= 0)
+                {
+                    currNode = mazeArray[currNode.parentX, currNode.parentY];
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
 
         private void findFinishPixels()
@@ -60,7 +198,8 @@ namespace MazeSolver
                         if (hasMove(i, j))
                         {
                             //We want this so we can initially populate the open queue
-                            startPixels.Add(n);
+                            startPixelsX.Add(i);
+                            startPixelsY.Add(j);
                         }
                     }
                     //This is true if the pixel is blue

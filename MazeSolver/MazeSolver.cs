@@ -14,10 +14,7 @@ namespace MazeSolver
             Console.WriteLine(args[0]);
             Bitmap mazeImage = (Bitmap) Image.FromFile(args[0]);
             Maze maze = new Maze(mazeImage);
-            maze.solve();
-            //Begin Debug apparati
-            while (true) { }
-            //End Debug apparati
+            maze.solve().Save(args[1], System.Drawing.Imaging.ImageFormat.Png);
         }
     }
 }
