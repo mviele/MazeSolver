@@ -11,8 +11,13 @@ namespace MazeSolver
     {
         static void Main(string[] args)
         {
+            Console.WriteLine(args[0]);
             Bitmap mazeImage = (Bitmap) Image.FromFile(args[0]);
             Maze maze = new Maze(mazeImage);
+            maze.solve();
+            //Begin Debug apparati
+            while (true) { }
+            //End Debug apparati
         }
     }
 }

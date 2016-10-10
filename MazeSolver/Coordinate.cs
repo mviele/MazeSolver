@@ -59,5 +59,11 @@ namespace MazeSolver
         {
             this.y = y;
         }
+
+        override
+        public String ToString()
+        {
+            return "(" + this.x + "," + this.y + ")";
+        }
     }
 }
