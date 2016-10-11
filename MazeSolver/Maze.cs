@@ -201,7 +201,7 @@ namespace MazeSolver
                 }
                 else
                 {
-                    break;
+                    break; 
                 }
             }
 
@@ -220,7 +220,7 @@ namespace MazeSolver
                 {
                     if (mazeImage.GetPixel(i, j).R == 0 && mazeImage.GetPixel(i, j).G == 0 && mazeImage.GetPixel(i, j).B == 255)
                     {
-                        if (hasMove(j, i))
+                        if (hasMove(i, j))
                         {
                             finishX = i;
                             finishY = j;
@@ -297,9 +297,6 @@ namespace MazeSolver
                 }
             }
 
-            // Copy the RGB values back to the bitmap
-            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
-
             // Unlock the bits.
             mazeImage.UnlockBits(mazeImageData);
         }
@@ -330,11 +327,28 @@ namespace MazeSolver
             bool left = false;
             bool right = false;
 
-            if(x - 1 < 0)
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, mazeImage.Width, mazeImage.Height);
+            System.Drawing.Imaging.BitmapData mazeImageData =
+                mazeImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            // Get the address of the first line.
+            IntPtr ptr = mazeImageData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = Math.Abs(mazeImageData.Stride) * mazeImage.Height;
+            byte[] rgbValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
+            int stepSize = 4;
+            Int64 rgbCounter = (y * mazeImage.Width + x) * stepSize;
+            if (x - 1 < 0)
             {
                 left = false;
             }
-            else if(mazeImage.GetPixel(x - 1, y).R == 255 && mazeImage.GetPixel(x - 1, y).G == 255 && mazeImage.GetPixel(x - 1, y).B == 255)
+            else if(rgbValues[rgbCounter + 2 - stepSize] == 255 && rgbValues[rgbCounter + 1 - stepSize] == 255 && rgbValues[rgbCounter - stepSize] == 255)
             {
                 left = true;
             }
@@ -343,7 +357,7 @@ namespace MazeSolver
             {
                 up = false;
             }
-            else if (mazeImage.GetPixel(x, y - 1).R == 255 && mazeImage.GetPixel(x, y - 1).G == 255 && mazeImage.GetPixel(x, y - 1).B == 255)
+            else if (rgbValues[rgbCounter + 2 - (mazeImage.Width * stepSize)] == 255 && rgbValues[rgbCounter + 1 - (mazeImage.Width * stepSize)] == 255 && rgbValues[rgbCounter - (mazeImage.Width * stepSize)] == 255)
             {
                 up = true;
             }
@@ -352,7 +366,7 @@ namespace MazeSolver
             {
                 right = false;
             }
-            else if (mazeImage.GetPixel(x + 1, y).R == 255 && mazeImage.GetPixel(x + 1, y).G == 255 && mazeImage.GetPixel(x + 1, y).B == 255)
+            else if (rgbValues[rgbCounter + 2 + stepSize] == 255 && rgbValues[rgbCounter + 1 + stepSize] == 255 && rgbValues[rgbCounter + stepSize] == 255)
             {
                 right = true;
             }
@@ -361,10 +375,13 @@ namespace MazeSolver
             {
                 down = false;
             }
-            else if (mazeImage.GetPixel(x, y + 1).R == 255 && mazeImage.GetPixel(x, y + 1).G == 255 && mazeImage.GetPixel(x, y + 1).B == 255)
+            else if (rgbValues[rgbCounter + 2 + (mazeImage.Width * stepSize)] == 255 && rgbValues[rgbCounter + 1 + (mazeImage.Width * stepSize)] == 255 && rgbValues[rgbCounter + (mazeImage.Width * stepSize)] == 255)
             {
                 down = true;
             }
+
+            // Unlock the bits.
+            mazeImage.UnlockBits(mazeImageData);
 
             return up || down || left || right;
         }

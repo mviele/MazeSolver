@@ -18,7 +18,7 @@ namespace MazeSolver
 
         public bool isEmpty()
         {
-            if (list.Length == 0)
+            if (size == 0)
             {
                 return true;
             }
