@@ -10,6 +10,9 @@ namespace MyPriorityQueueUnitTests
         public void TestMethod1()
         {
             MyPriorityQueue<int> q = new MyPriorityQueue<int>();
+            q.Enqueue(7);
+            q.Enqueue(10);
+            q.Enqueue(6);
             q.Enqueue(2);
             q.Enqueue(4);
             q.Enqueue(1);

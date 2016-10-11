@@ -3,4 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartArguments>"C:\Users\Matt\Documents\Visual Studio 2015\Projects\MazeSolver\MazeSolver\maze1.png" "C:\Users\Matt\Documents\Visual Studio 2015\Projects\MazeSolver\MazeSolver\maze1solved.png"</StartArguments>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <StartArguments>"C:\Users\Matt\Documents\Visual Studio 2015\Projects\MazeSolver\MazeSolver\maze2.png" "C:\Users\Matt\Documents\Visual Studio 2015\Projects\MazeSolver\MazeSolver\maze2solved.png"</StartArguments>
+  </PropertyGroup>
 </Project>

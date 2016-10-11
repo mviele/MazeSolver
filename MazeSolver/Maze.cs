@@ -22,6 +22,7 @@ namespace MazeSolver
             startPixelsY = new List<Int32>();
             this.findFinishPixels();
             this.buildMazeArray();
+            this.buildStartList();
         }
 
 
@@ -47,88 +48,88 @@ namespace MazeSolver
                 if(n.x - 1 >= 0)
                 {
                     //Found a finishing node, so now we finish
-                    if (mazeArray[n.x - 1, n.y].cellType == 3)
+                    if (mazeArray[n.y, n.x - 1].cellType == 3)
                     {
-                        mazeArray[n.x - 1, n.y].parentX = n.x;
-                        mazeArray[n.x - 1, n.y].parentY = n.y;
-                        end = mazeArray[n.x - 1, n.y];
+                        mazeArray[n.y, n.x - 1].parentX = n.x;
+                        mazeArray[n.y, n.x - 1].parentY = n.y;
+                        end = mazeArray[n.y, n.x - 1];
                         break;
                     }
                     //Found a white pixel we haven't visited yet, update it's info and add it to the queue
-                    else if (mazeArray[n.x - 1, n.y].cellType == 0 && !mazeArray[n.x - 1, n.y].visited)
+                    else if (mazeArray[n.y, n.x - 1].cellType == 0 && !mazeArray[n.y, n.x - 1].visited)
                     {
-                        mazeArray[n.x - 1, n.y].visited = true;
-                        mazeArray[n.x - 1, n.y].parentX = n.x;
-                        mazeArray[n.x - 1, n.y].parentY = n.y;
-                        mazeArray[n.x - 1, n.y].steps = n.steps + 1;
-                        mazeArray[n.x - 1, n.y].score += n.steps;
-                        open.Enqueue(mazeArray[n.x - 1, n.y]);
+                        mazeArray[n.y, n.x - 1].visited = true;
+                        mazeArray[n.y, n.x - 1].parentX = n.x;
+                        mazeArray[n.y, n.x - 1].parentY = n.y;
+                        mazeArray[n.y, n.x - 1].steps = n.steps + 1;
+                        mazeArray[n.y, n.x - 1].score += n.steps;
+                        open.Enqueue(mazeArray[n.y, n.x - 1]);
                     }
                 }
                 //check cell to the right
-                if (n.x + 1 < mazeImage.Height)
+                if (n.x + 1 < mazeImage.Width)
                 {
                     //Found a finishing node, so now we finish
-                    if (mazeArray[n.x + 1, n.y].cellType == 3)
+                    if (mazeArray[n.y, n.x + 1].cellType == 3)
                     {
-                        mazeArray[n.x + 1, n.y].parentX = n.x;
-                        mazeArray[n.x + 1, n.y].parentY = n.y;
-                        end = mazeArray[n.x + 1, n.y];
+                        mazeArray[n.y, n.x + 1].parentX = n.x;
+                        mazeArray[n.y, n.x + 1].parentY = n.y;
+                        end = mazeArray[n.y, n.x + 1];
                         break;
                     }
                     //Found a white pixel we haven't visited yet, update it's info and add it to the queue
-                    else if (mazeArray[n.x + 1, n.y].cellType == 0 && !mazeArray[n.x + 1, n.y].visited)
+                    else if (mazeArray[n.y, n.x + 1].cellType == 0 && !mazeArray[n.y, n.x + 1].visited)
                     {
-                        mazeArray[n.x + 1, n.y].visited = true;
-                        mazeArray[n.x + 1, n.y].parentX = n.x;
-                        mazeArray[n.x + 1, n.y].parentY = n.y;
-                        mazeArray[n.x + 1, n.y].steps = n.steps + 1;
-                        mazeArray[n.x + 1, n.y].score += n.steps;
-                        open.Enqueue(mazeArray[n.x + 1, n.y]);
+                        mazeArray[n.y, n.x + 1].visited = true;
+                        mazeArray[n.y, n.x + 1].parentX = n.x;
+                        mazeArray[n.y, n.x + 1].parentY = n.y;
+                        mazeArray[n.y, n.x + 1].steps = n.steps + 1;
+                        mazeArray[n.y, n.x + 1].score += n.steps;
+                        open.Enqueue(mazeArray[n.y, n.x + 1]);
                     }
                 }
                 //check cell above
                 if (n.y - 1 >= 0)
                 {
                     //Found a finishing node, so now we finish
-                    if (mazeArray[n.x, n.y - 1].cellType == 3)
+                    if (mazeArray[n.y - 1, n.x].cellType == 3)
                     {
-                        mazeArray[n.x, n.y - 1].parentX = n.x;
-                        mazeArray[n.x, n.y - 1].parentY = n.y;
-                        end = mazeArray[n.x, n.y - 1];
+                        mazeArray[n.y - 1, n.x].parentX = n.x;
+                        mazeArray[n.y - 1, n.x].parentY = n.y;
+                        end = mazeArray[n.y - 1, n.x];
                         break;
                     }
                     //Found a white pixel we haven't visited yet, update it's info and add it to the queue
-                    else if (mazeArray[n.x, n.y - 1].cellType == 0 && !mazeArray[n.x, n.y - 1].visited)
+                    else if (mazeArray[n.y - 1, n.x].cellType == 0 && !mazeArray[n.y - 1, n.x].visited)
                     {
-                        mazeArray[n.x, n.y - 1].visited = true;
-                        mazeArray[n.x, n.y - 1].parentX = n.x;
-                        mazeArray[n.x, n.y - 1].parentY = n.y;
-                        mazeArray[n.x, n.y - 1].steps = n.steps + 1;
-                        mazeArray[n.x, n.y - 1].score += n.steps;
-                        open.Enqueue(mazeArray[n.x, n.y - 1]);
+                        mazeArray[n.y - 1, n.x].visited = true;
+                        mazeArray[n.y - 1, n.x].parentX = n.x;
+                        mazeArray[n.y - 1, n.x].parentY = n.y;
+                        mazeArray[n.y - 1, n.x].steps = n.steps + 1;
+                        mazeArray[n.y - 1, n.x].score += n.steps;
+                        open.Enqueue(mazeArray[n.y - 1, n.x]);
                     }
                 }
                 //check cell above
-                if (n.y + 1 < mazeImage.Width)
+                if (n.y + 1 < mazeImage.Height)
                 {
                     //Found a finishing node, so now we finish
-                    if (mazeArray[n.x, n.y + 1].cellType == 3)
+                    if (mazeArray[n.y + 1, n.x].cellType == 3)
                     {
-                        mazeArray[n.x, n.y + 1].parentX = n.x;
-                        mazeArray[n.x, n.y + 1].parentY = n.y;
-                        end = mazeArray[n.x, n.y + 1];
+                        mazeArray[n.y + 1, n.x].parentX = n.x;
+                        mazeArray[n.y + 1, n.x].parentY = n.y;
+                        end = mazeArray[n.y + 1, n.x];
                         break;
                     }
                     //Found a white pixel we haven't visited yet, update it's info and add it to the queue
-                    else if (mazeArray[n.x, n.y + 1].cellType == 0 && !mazeArray[n.x, n.y + 1].visited)
+                    else if (mazeArray[n.y + 1, n.x].cellType == 0 && !mazeArray[n.y + 1, n.x].visited)
                     {
-                        mazeArray[n.x, n.y + 1].visited = true;
-                        mazeArray[n.x, n.y + 1].parentX = n.x;
-                        mazeArray[n.x, n.y + 1].parentY = n.y;
-                        mazeArray[n.x, n.y + 1].steps = n.steps + 1;
-                        mazeArray[n.x, n.y + 1].score += n.steps;
-                        open.Enqueue(mazeArray[n.x, n.y + 1]);
+                        mazeArray[n.y + 1, n.x].visited = true;
+                        mazeArray[n.y + 1, n.x].parentX = n.x;
+                        mazeArray[n.y + 1, n.x].parentY = n.y;
+                        mazeArray[n.y + 1, n.x].steps = n.steps + 1;
+                        mazeArray[n.y + 1, n.x].score += n.steps;
+                        open.Enqueue(mazeArray[n.y + 1, n.x]);
                     }
                 }
             }
@@ -147,22 +148,64 @@ namespace MazeSolver
         private void printSolution(Int32 x, Int32 y)
         {
             Node currNode = mazeArray[x, y];
+
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, mazeImage.Width, mazeImage.Height);
+            System.Drawing.Imaging.BitmapData mazeImageData =
+                mazeImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                mazeImage.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = mazeImageData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = Math.Abs(mazeImageData.Stride) * mazeImage.Height;
+            byte[] rgbValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
+
+            int stepSize = 0;
+            switch (mazeImage.PixelFormat)
+            {
+                case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+                    stepSize = 3;
+                    break;
+                case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+                    stepSize = 4;
+                    break;
+                default:
+                    throw new Exception("Unsupported Pixel format");
+
+            }
+
+            Int64 rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * stepSize;
             while (true)
             {
-                if (currNode.cellType == 0)
+                if (currNode.cellType == 0 && currNode.parentX >= 0 && currNode.parentY >= 0)
                 {
-                    mazeImage.SetPixel(x, y, Color.Lime);
+                    rgbValues[rgbCounter + 2] = 0;
+                    rgbValues[rgbCounter + 1] = 255;
+                    rgbValues[rgbCounter ] = 0;
                     currNode = mazeArray[currNode.parentX, currNode.parentY];
+                    rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * stepSize;
                 }
                 else if (currNode.parentX >= 0 && currNode.parentY >= 0)
                 {
                     currNode = mazeArray[currNode.parentX, currNode.parentY];
+                    rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * stepSize;
                 }
                 else
                 {
-                    return;
+                    break;
                 }
             }
+
+            // Copy the RGB values back to the bitmap
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+
+            // Unlock the bits.
+            mazeImage.UnlockBits(mazeImageData);
         }
 
         private void findFinishPixels()
@@ -171,9 +214,9 @@ namespace MazeSolver
             {
                 for (int j = 0; j < mazeImage.Width; j++)
                 {
-                    if (mazeImage.GetPixel(i, j).R == 0 && mazeImage.GetPixel(i, j).G == 0 && mazeImage.GetPixel(i, j).B == 255)
+                    if (mazeImage.GetPixel(j, i).R == 0 && mazeImage.GetPixel(j, i).G == 0 && mazeImage.GetPixel(j, i).B == 255)
                     {
-                        if (hasMove(i, j))
+                        if (hasMove(j, i))
                         {
                             finishX = i;
                             finishY = j;
@@ -186,41 +229,95 @@ namespace MazeSolver
 
         private void buildMazeArray()
         {
-            for (int i = 0; i < mazeImage.Height; i++)
+            // Lock the bitmap's bits.  
+            Rectangle rect = new Rectangle(0, 0, mazeImage.Width, mazeImage.Height);
+            System.Drawing.Imaging.BitmapData mazeImageData =
+                mazeImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                mazeImage.PixelFormat);
+
+            // Get the address of the first line.
+            IntPtr ptr = mazeImageData.Scan0;
+
+            // Declare an array to hold the bytes of the bitmap.
+            int bytes = Math.Abs(mazeImageData.Stride) * mazeImage.Height;
+            byte[] rgbValues = new byte[bytes];
+
+            // Copy the RGB values into the array.
+            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
+            int stepSize = 0;
+            switch (mazeImage.PixelFormat)
             {
-                for (int j = 0; j < mazeImage.Width; j++)
+                case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+                    stepSize = 3;
+                    break;
+                case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+                    stepSize = 4;
+                    break;
+                default:
+                    throw new Exception("Unsupported Pixel format");
+
+            }
+            Int64 rgbCounter = 0;
+            for (int j = 0; j < mazeImage.Height; j++)
+            {
+                for (int i = 0; i < mazeImage.Width; i++)
                 {
+
                     //This is true if the pixel is red
-                    if (mazeImage.GetPixel(i, j).R == 255 && mazeImage.GetPixel(i, j).G == 0 && mazeImage.GetPixel(i, j).B == 0)
+                    if (rgbValues[rgbCounter + 2] == 255 && rgbValues[rgbCounter + 1] == 0 && rgbValues[rgbCounter] == 0)
                     {
                         Node n = new Node(2, i, j, finishX, finishY);
-                        mazeArray[i, j] = n;
-                        if (hasMove(i, j))
+                        mazeArray[j, i] = n;
+
+                    }
+                    //This is true if the pixel is blue
+                    else if (rgbValues[rgbCounter + 2] == 0 && rgbValues[rgbCounter + 1] == 0 && rgbValues[rgbCounter] == 255)
+                    {
+                        mazeArray[j, i] = new Node(3, i, j, finishX, finishY);
+                    }
+                    //This is true if the pixel is black
+                    else if (rgbValues[rgbCounter + 2] == 0 && rgbValues[rgbCounter + 1] == 0 && rgbValues[rgbCounter] == 0)
+                    {
+                        mazeArray[j, i] = new Node(1, i, j, finishX, finishY);
+                    }
+                    //This is true if the pixel is any other color (should all be white)
+                    else
+                    {
+                        mazeArray[j, i] = new Node(0, i, j, finishX, finishY);
+                    }
+                    rgbCounter += stepSize;
+                    if(rgbCounter >= bytes)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // Copy the RGB values back to the bitmap
+            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
+
+            // Unlock the bits.
+            mazeImage.UnlockBits(mazeImageData);
+        }
+
+        private void buildStartList()
+        {
+            for (int j = 0; j < mazeImage.Height; j++)
+            {
+                for (int i = 0; i < mazeImage.Width; i++)
+                {
+                    if (mazeArray[j, i].cellType == 2)
+                    {
+                        if (hasMove(j, i))
                         {
                             //We want this so we can initially populate the open queue
                             startPixelsX.Add(i);
                             startPixelsY.Add(j);
                         }
                     }
-                    //This is true if the pixel is blue
-                    else if (mazeImage.GetPixel(i, j).R == 0 && mazeImage.GetPixel(i, j).G == 0 && mazeImage.GetPixel(i, j).B == 255)
-                    {
-                        mazeArray[i, j] = new Node(3, i, j, finishX, finishY);
-                    }
-                    //This is true if the pixel is black
-                    else if (mazeImage.GetPixel(i, j).R == 0 && mazeImage.GetPixel(i, j).G == 0 && mazeImage.GetPixel(i, j).B == 0)
-                    {
-                        mazeArray[i, j] = new Node(1, i, j, finishX, finishY);
-                    }
-                    //This is true if the pixel is any other color (should all be white)
-                    else
-                    {
-                        mazeArray[i, j] = new Node(0, i, j, finishX, finishY);
-                    }
                 }
             }
         }
-
 
         private bool hasMove(Int32 x, Int32 y)
         {
