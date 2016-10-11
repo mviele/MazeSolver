@@ -28,7 +28,7 @@ namespace MazeSolver
 
         public Bitmap solve()
         {
-            MyPriorityQueue <Node> open = new MyPriorityQueue<Node>();
+            MyPriorityQueue <Node> open = new MyPriorityQueue<Node>(mazeImage.Width * mazeImage.Height);
             for(int x = 0; x < startPixelsX.Count; x++)
             {
                 Node node = mazeArray[startPixelsY.ElementAt(x), startPixelsX.ElementAt(x)];
@@ -157,7 +157,7 @@ namespace MazeSolver
             Rectangle rect = new Rectangle(0, 0, mazeImage.Width, mazeImage.Height);
             System.Drawing.Imaging.BitmapData mazeImageData =
                 mazeImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                mazeImage.PixelFormat);
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             // Get the address of the first line.
             IntPtr ptr = mazeImageData.Scan0;
@@ -169,19 +169,19 @@ namespace MazeSolver
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
 
-            int stepSize = 0;
-            switch (mazeImage.PixelFormat)
-            {
-                case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-                    stepSize = 3;
-                    break;
-                case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-                    stepSize = 4;
-                    break;
-                default:
-                    throw new Exception("Unsupported Pixel format");
+            int stepSize = 4;
+            //switch (mazeImage.PixelFormat)
+            //{
+            //    case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+            //        stepSize = 3;
+            //        break;
+            //    case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+            //        stepSize = 4;
+            //        break;
+            //    default:
+            //        throw new Exception("Unsupported Pixel format");
 
-            }
+            //}
 
             Int64 rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * stepSize;
             while (true)
@@ -214,9 +214,9 @@ namespace MazeSolver
 
         private void findFinishPixels()
         {
-            for (int i = 0; i < mazeImage.Height; i++)
+            for (int i = 0; i < mazeImage.Width; i++)
             {
-                for (int j = 0; j < mazeImage.Width; j++)
+                for (int j = 0; j < mazeImage.Height; j++)
                 {
                     if (mazeImage.GetPixel(i, j).R == 0 && mazeImage.GetPixel(i, j).G == 0 && mazeImage.GetPixel(i, j).B == 255)
                     {
@@ -237,7 +237,7 @@ namespace MazeSolver
             Rectangle rect = new Rectangle(0, 0, mazeImage.Width, mazeImage.Height);
             System.Drawing.Imaging.BitmapData mazeImageData =
                 mazeImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                mazeImage.PixelFormat);
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             // Get the address of the first line.
             IntPtr ptr = mazeImageData.Scan0;
@@ -248,19 +248,19 @@ namespace MazeSolver
 
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
-            int stepSize = 0;
-            switch (mazeImage.PixelFormat)
-            {
-                case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-                    stepSize = 3;
-                    break;
-                case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-                    stepSize = 4;
-                    break;
-                default:
-                    throw new Exception("Unsupported Pixel format");
+            int stepSize = 4;
+            //switch (mazeImage.PixelFormat)
+            //{
+            //    case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+            //        stepSize = 3;
+            //        break;
+            //    case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+            //        stepSize = 4;
+            //        break;
+            //    default:
+            //        throw new Exception("Unsupported Pixel format");
 
-            }
+            //}
             Int64 rgbCounter = 0;
             for (int j = 0; j < mazeImage.Height; j++)
             {

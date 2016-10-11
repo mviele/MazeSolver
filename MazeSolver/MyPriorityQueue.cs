@@ -7,15 +7,18 @@ namespace MazeSolver
 {
     class MyPriorityQueue<T> where T : IComparable
     {
-        private List<T> list;
+        private T[] list;
+        private int size;
 
-        public MyPriorityQueue() {
-            list = new List<T>();
+        public MyPriorityQueue(int size)
+        {
+            this.size = 0;
+            list = new T[size];
         }
 
         public bool isEmpty()
         {
-            if (list.Count == 0)
+            if (list.Length == 0)
             {
                 return true;
             }
@@ -24,9 +27,14 @@ namespace MazeSolver
 
         public void Enqueue(T t)
         {
-            list.Add(t);
-            int position = list.Count - 1;
-            while (position > 0 && t.CompareTo(list.ElementAt(position / 2)) < 0)
+            if (size == list.Length - 1)
+            {
+                throw new Exception("The queue is full");
+            }
+            list[size] = t;
+            int position = size;
+            size++;
+            while (position > 0 && t.CompareTo(list[position / 2]) < 0)
             {
                 swap(position, position / 2);
                 position /= 2;
@@ -35,32 +43,35 @@ namespace MazeSolver
 
         public T Dequeue()
         {
-            swap(0, list.Count - 1);
-            T value = list.Last();
-            list.RemoveAt(list.Count - 1);
+            if (size == 0)
+            {
+                return default(T);
+            }
+            swap(0, size - 1);
+            T value = list[size - 1];
+            size--;
             minHeapify(0);
 
             return value;
         }
 
-        private void swap(int x1, int x2){
-            var temp = list.ElementAt(x1);
-            list.Insert(x1, list.ElementAt(x2));
-            list.RemoveAt(x1 + 1);
-            list.Insert(x2, temp);
-            list.RemoveAt(x2 + 1);
+        private void swap(int x1, int x2)
+        {
+            var temp = list[x1];
+            list[x1] = list[x2];
+            list[x2] = temp;
         }
 
         private void minHeapify(int index)
         {
             int smallest = index;
-            if (list.Count - 1 >= 2*index && list.ElementAt(2*index).CompareTo(list.ElementAt(smallest)) < 0)
+            if (size - 1 >= 2 * index && list[2 * index].CompareTo(list[smallest]) < 0)
             {
-                smallest = 2*index;
+                smallest = 2 * index;
             }
-            if (list.Count - 1 >= (2 * index) + 1 && list.ElementAt((2 * index) + 1).CompareTo(list.ElementAt(smallest)) < 0)
+            if (size - 1 >= (2 * index) + 1 && list[(2 * index) + 1].CompareTo(list[smallest]) < 0)
             {
-                smallest = 2*index + 1;
+                smallest = 2 * index + 1;
             }
             if (smallest != index)
             {
