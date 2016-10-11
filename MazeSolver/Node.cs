@@ -16,7 +16,7 @@ namespace MazeSolver
         public Int32 steps { get; set; }
         public bool visited { get; set; }
 
-        public Node(byte cellType, Int32 this_y, Int32 this_x, Int32 goal_x, Int32 goal_y)
+        public Node(byte cellType, Int32 this_x, Int32 this_y, Int32 goal_x, Int32 goal_y)
         {
             this.cellType = cellType;
             this.x = this_x;

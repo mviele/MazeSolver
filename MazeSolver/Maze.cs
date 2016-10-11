@@ -31,7 +31,11 @@ namespace MazeSolver
             MyPriorityQueue <Node> open = new MyPriorityQueue<Node>();
             for(int x = 0; x < startPixelsX.Count; x++)
             {
-                Node node = mazeArray[startPixelsX.ElementAt(x), startPixelsY.ElementAt(x)];
+                Node node = mazeArray[startPixelsY.ElementAt(x), startPixelsX.ElementAt(x)];
+                if(node.cellType != 2)
+                {
+                    throw new Exception("Invalid Start Location");
+                }
                 node.visited = true;
                 node.steps = 0;
                 node.parentX = -1;
@@ -147,7 +151,7 @@ namespace MazeSolver
 
         private void printSolution(Int32 x, Int32 y)
         {
-            Node currNode = mazeArray[x, y];
+            Node currNode = mazeArray[y, x];
 
             // Lock the bitmap's bits.  
             Rectangle rect = new Rectangle(0, 0, mazeImage.Width, mazeImage.Height);
@@ -187,12 +191,12 @@ namespace MazeSolver
                     rgbValues[rgbCounter + 2] = 0;
                     rgbValues[rgbCounter + 1] = 255;
                     rgbValues[rgbCounter ] = 0;
-                    currNode = mazeArray[currNode.parentX, currNode.parentY];
+                    currNode = mazeArray[currNode.parentY, currNode.parentX];
                     rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * stepSize;
                 }
                 else if (currNode.parentX >= 0 && currNode.parentY >= 0)
                 {
-                    currNode = mazeArray[currNode.parentX, currNode.parentY];
+                    currNode = mazeArray[currNode.parentY, currNode.parentX];
                     rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * stepSize;
                 }
                 else
@@ -214,7 +218,7 @@ namespace MazeSolver
             {
                 for (int j = 0; j < mazeImage.Width; j++)
                 {
-                    if (mazeImage.GetPixel(j, i).R == 0 && mazeImage.GetPixel(j, i).G == 0 && mazeImage.GetPixel(j, i).B == 255)
+                    if (mazeImage.GetPixel(i, j).R == 0 && mazeImage.GetPixel(i, j).G == 0 && mazeImage.GetPixel(i, j).B == 255)
                     {
                         if (hasMove(j, i))
                         {
@@ -308,7 +312,7 @@ namespace MazeSolver
                 {
                     if (mazeArray[j, i].cellType == 2)
                     {
-                        if (hasMove(j, i))
+                        if (hasMove(i, j))
                         {
                             //We want this so we can initially populate the open queue
                             startPixelsX.Add(i);
