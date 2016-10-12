@@ -386,7 +386,7 @@ namespace MazeSolver
          * coordinate to see if a white node borders it.
          * 
          **/
-        private bool hasMove(Int32 x, Int32 y)
+        private bool hasMove(Int32 y, Int32 x)
         {
             if(mazeArray[y, x - 1].cellType == 0 && x - 1 >= 0)
             {
