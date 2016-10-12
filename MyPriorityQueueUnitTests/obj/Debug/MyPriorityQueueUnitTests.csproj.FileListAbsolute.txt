@@ -1,0 +1,6 @@
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\MazeSolver\MyPriorityQueueUnitTests\bin\Debug\MyPriorityQueueUnitTests.dll
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\MazeSolver\MyPriorityQueueUnitTests\bin\Debug\MyPriorityQueueUnitTests.pdb
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\MazeSolver\MyPriorityQueueUnitTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\MazeSolver\MyPriorityQueueUnitTests\obj\Debug\MyPriorityQueueUnitTests.csprojResolveAssemblyReference.cache
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\MazeSolver\MyPriorityQueueUnitTests\obj\Debug\MyPriorityQueueUnitTests.dll
+C:\Users\Matt\Documents\Visual Studio 2015\Projects\MazeSolver\MyPriorityQueueUnitTests\obj\Debug\MyPriorityQueueUnitTests.pdb

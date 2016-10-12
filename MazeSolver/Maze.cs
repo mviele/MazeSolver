@@ -8,12 +8,31 @@ namespace MazeSolver
 {
     class Maze
     {
+        //Bitmap of the maze image
         private Bitmap mazeImage;
+
+        //Matrix of nodes representing the maze
         private Node[,] mazeArray;
+
+        //List of x coordinates of valid starting pixels
         private List<Int32> startPixelsX;
+
+        //List of y coordinates of valid starting pixels
         private List<Int32> startPixelsY;
+
+        //The finishing coordinates, these will be our 
+        //reference for creating the heuristic scores of each node
         private Int32 finishX, finishY;
+
+        //The offset for getting the r, g, and b pixels from
+        //the byte array of the image pixels. This will change
+        //depending on the endianess of your machine.
         private byte redOffset, blueOffset, greenOffset;
+
+        //Step size for iterating through the byte array of
+        //the image pixels. It is defined as 4 since we are
+        //using the argb encoding when grabbing the array.
+        private readonly int STEP_SIZE = 4;
 
         public Maze(Bitmap mazeImage)
         {
@@ -38,16 +57,21 @@ namespace MazeSolver
             this.buildStartList();
         }
 
+        /**
+         * O(N*M)
+         * A* search to find a (nearly) optimal solution to the maze.
+         * It then prints the solution to the image and returns it. 
+         * 
+         **/
         public Bitmap solve()
         {
+            //PriorityQueue represents the open set of nodes to be checked
             MyPriorityQueue <Node> open = new MyPriorityQueue<Node>(mazeImage.Width * mazeImage.Height);
+
+            //loop through all starting pixels, initialize their respective nodes as starting nodes, and enqueue them
             for(int x = 0; x < startPixelsX.Count; x++)
             {
                 Node node = mazeArray[startPixelsY.ElementAt(x), startPixelsX.ElementAt(x)];
-                if(node.cellType != 2)
-                {
-                    throw new Exception("Invalid Start Location");
-                }
                 node.visited = true;
                 node.steps = 0;
                 node.parentX = -1;
@@ -57,9 +81,11 @@ namespace MazeSolver
 
             Node end = null;
             Node n;
+
             while (!open.isEmpty())
             {
                 n = open.Dequeue();
+
                 //check cell to the left
                 if(n.x - 1 >= 0)
                 {
@@ -71,8 +97,10 @@ namespace MazeSolver
                         end = mazeArray[n.y, n.x - 1];
                         break;
                     }
-                    //Found a white pixel we haven't visited yet, update it's info and add it to the queue
-                    else if (mazeArray[n.y, n.x - 1].cellType == 0 && !mazeArray[n.y, n.x - 1].visited)
+                    //Found a white pixel we haven't visited yet, 
+                    //update it's info and add it to the queue
+                    else if (mazeArray[n.y, n.x - 1].cellType == 0 
+                        && !mazeArray[n.y, n.x - 1].visited)
                     {
                         mazeArray[n.y, n.x - 1].visited = true;
                         mazeArray[n.y, n.x - 1].parentX = n.x;
@@ -93,8 +121,10 @@ namespace MazeSolver
                         end = mazeArray[n.y, n.x + 1];
                         break;
                     }
-                    //Found a white pixel we haven't visited yet, update it's info and add it to the queue
-                    else if (mazeArray[n.y, n.x + 1].cellType == 0 && !mazeArray[n.y, n.x + 1].visited)
+                    //Found a white pixel we haven't visited yet, 
+                    //update it's info and add it to the queue
+                    else if (mazeArray[n.y, n.x + 1].cellType == 0 
+                        && !mazeArray[n.y, n.x + 1].visited)
                     {
                         mazeArray[n.y, n.x + 1].visited = true;
                         mazeArray[n.y, n.x + 1].parentX = n.x;
@@ -115,8 +145,10 @@ namespace MazeSolver
                         end = mazeArray[n.y - 1, n.x];
                         break;
                     }
-                    //Found a white pixel we haven't visited yet, update it's info and add it to the queue
-                    else if (mazeArray[n.y - 1, n.x].cellType == 0 && !mazeArray[n.y - 1, n.x].visited)
+                    //Found a white pixel we haven't visited yet, 
+                    //update it's info and add it to the queue
+                    else if (mazeArray[n.y - 1, n.x].cellType == 0 
+                        && !mazeArray[n.y - 1, n.x].visited)
                     {
                         mazeArray[n.y - 1, n.x].visited = true;
                         mazeArray[n.y - 1, n.x].parentX = n.x;
@@ -137,8 +169,10 @@ namespace MazeSolver
                         end = mazeArray[n.y + 1, n.x];
                         break;
                     }
-                    //Found a white pixel we haven't visited yet, update it's info and add it to the queue
-                    else if (mazeArray[n.y + 1, n.x].cellType == 0 && !mazeArray[n.y + 1, n.x].visited)
+                    //Found a white pixel we haven't visited yet, 
+                    //update it's info and add it to the queue
+                    else if (mazeArray[n.y + 1, n.x].cellType == 0 
+                        && !mazeArray[n.y + 1, n.x].visited)
                     {
                         mazeArray[n.y + 1, n.x].visited = true;
                         mazeArray[n.y + 1, n.x].parentX = n.x;
@@ -161,6 +195,13 @@ namespace MazeSolver
             }
         }
 
+        /**
+         * O(N*M)
+         * Traces the solution path back using the parentX and parentY
+         * variables of each node, and prints this path in green onto
+         * the Maze's stored image.
+         * 
+         **/
         private void printSolution(Int32 x, Int32 y)
         {
             Node currNode = mazeArray[y, x];
@@ -181,24 +222,30 @@ namespace MazeSolver
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(imagePointer, argbValues, 0, byteArraySize);
 
-            int stepSize = 4;
-
-            Int64 rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * stepSize;
+            Int64 rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * STEP_SIZE;
             while (true)
             {
-                if (currNode.cellType == 0 && currNode.parentX >= 0 && currNode.parentY >= 0)
+                //A white cell
+                if (currNode.cellType == 0)
                 {
+                    //Set the corresponding pixel to green in the image
                     argbValues[rgbCounter + redOffset] = 0;
                     argbValues[rgbCounter + greenOffset] = 255;
                     argbValues[rgbCounter + blueOffset] = 0;
+
+                    //grab the next node to examine in our backward trace of solution path
                     currNode = mazeArray[currNode.parentY, currNode.parentX];
-                    rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * stepSize;
+
+                    //readjust our argb byte array pointer
+                    rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * STEP_SIZE;
                 }
+                //A blue finish node
                 else if (currNode.parentX >= 0 && currNode.parentY >= 0)
                 {
                     currNode = mazeArray[currNode.parentY, currNode.parentX];
-                    rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * stepSize;
+                    rgbCounter = (currNode.y * mazeImage.Width + currNode.x) * STEP_SIZE;
                 }
+                //A red starting node
                 else
                 {
                     break; 
@@ -212,6 +259,13 @@ namespace MazeSolver
             mazeImage.UnlockBits(mazeImageData);
         }
 
+        /**
+         * O(N*M)
+         * Searches through the maze for the first instance 
+         * of a blue pixel and sets that as our target pixel
+         * during our A* search
+         * 
+         **/
         private void findFinishPixels()
         {
             for (int i = 0; i < mazeImage.Width; i++)
@@ -222,17 +276,21 @@ namespace MazeSolver
                         && mazeImage.GetPixel(i, j).G == 0 
                         && mazeImage.GetPixel(i, j).B == 255)
                     {
-                        if (hasMove(i, j))
-                        {
-                            finishX = i;
-                            finishY = j;
-                            return;
-                        }
+                        finishX = i;
+                        finishY = j;
+                        return;
                     }
                 }
             }
         }
 
+        /**
+         * O(N*M)
+         * Traverses the byte array of argb data from the image,
+         * and constructs our matrix of nodes that we use to 
+         * represent the maze.
+         * 
+         **/
         private void buildMazeArray()
         {
             // Lock the bitmap's bits.  
@@ -250,7 +308,6 @@ namespace MazeSolver
 
             // Copy the RGB values into the array.
             System.Runtime.InteropServices.Marshal.Copy(imagePointer, argbValues, 0, byteArraySize);
-            int stepSize = 4;
 
             Int64 rgbCounter = 0;
             for (int j = 0; j < mazeImage.Height; j++)
@@ -286,7 +343,7 @@ namespace MazeSolver
                     {
                         mazeArray[j, i] = new Node(0, i, j, finishX, finishY);
                     }
-                    rgbCounter += stepSize;
+                    rgbCounter += STEP_SIZE;
                     if(rgbCounter >= byteArraySize)
                     {
                         break;
@@ -298,6 +355,13 @@ namespace MazeSolver
             mazeImage.UnlockBits(mazeImageData);
         }
 
+        /**
+         * O(N*M)
+         * Searches through the maze for valid starting locations.
+         * These locations are defined as red nodes that are 
+         * adjacent to at least one white node. 
+         * 
+         **/
         private void buildStartList()
         {
             for (int j = 0; j < mazeImage.Height; j++)
@@ -306,9 +370,8 @@ namespace MazeSolver
                 {
                     if (mazeArray[j, i].cellType == 2)
                     {
-                        if (hasMove(i, j))
+                        if (hasMove(j, i))
                         {
-                            //We want this so we can initially populate the open queue
                             startPixelsX.Add(i);
                             startPixelsY.Add(j);
                         }
@@ -317,79 +380,35 @@ namespace MazeSolver
             }
         }
 
+        /**
+         * O(1)
+         * Checks each of the cardinal directions from a given 
+         * coordinate to see if a white node borders it.
+         * 
+         **/
         private bool hasMove(Int32 x, Int32 y)
         {
-            bool up = false;
-            bool down = false;
-            bool left = false;
-            bool right = false;
-
-            // Lock the bitmap's bits.  
-            Rectangle rect = new Rectangle(0, 0, mazeImage.Width, mazeImage.Height);
-            System.Drawing.Imaging.BitmapData mazeImageData =
-                mazeImage.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            // Get the address of the first line.
-            IntPtr imagePointer = mazeImageData.Scan0;
-
-            // Declare an array to hold the bytes of the bitmap.
-            int byteArraySize = Math.Abs(mazeImageData.Stride) * mazeImage.Height;
-            byte[] argbValues = new byte[byteArraySize];
-
-            // Copy the RGB values into the array.
-            System.Runtime.InteropServices.Marshal.Copy(imagePointer, argbValues, 0, byteArraySize);
-
-            int stepSize = 4;
-            Int64 rgbCounter = (y * mazeImage.Width + x) * stepSize;
-            if (x - 1 < 0)
+            if(mazeArray[y, x - 1].cellType == 0 && x - 1 >= 0)
             {
-                left = false;
-            }
-            else if(argbValues[rgbCounter + redOffset - stepSize] == 255 
-                && argbValues[rgbCounter + greenOffset - stepSize] == 255 
-                && argbValues[rgbCounter + blueOffset - stepSize] == 255)
-            {
-                left = true;
+                return true;
             }
 
-            if (y - 1 < 0)
+            if (mazeArray[y - 1, x].cellType == 0 && y - 1 >= 0)
             {
-                up = false;
-            }
-            else if (argbValues[rgbCounter + redOffset - (mazeImage.Width * stepSize)] == 255 
-                && argbValues[rgbCounter + greenOffset - (mazeImage.Width * stepSize)] == 255 
-                && argbValues[rgbCounter + blueOffset - (mazeImage.Width * stepSize)] == 255)
-            {
-                up = true;
+                return true;
             }
 
-            if (x + 1 == mazeImage.Width)
+            if (mazeArray[y, x + 1].cellType == 0 && x + 1 < mazeImage.Width)
             {
-                right = false;
-            }
-            else if (argbValues[rgbCounter + redOffset + stepSize] == 255 
-                && argbValues[rgbCounter + greenOffset + stepSize] == 255 
-                && argbValues[rgbCounter + blueOffset + stepSize] == 255)
-            {
-                right = true;
+                return true;
             }
 
-            if (y + 1 == mazeImage.Height)
+            if (mazeArray[y + 1, x].cellType == 0 && y + 1 < mazeImage.Height)
             {
-                down = false;
-            }
-            else if (argbValues[rgbCounter + redOffset + (mazeImage.Width * stepSize)] == 255 
-                && argbValues[rgbCounter + greenOffset + (mazeImage.Width * stepSize)] == 255 
-                && argbValues[rgbCounter + blueOffset + (mazeImage.Width * stepSize)] == 255)
-            {
-                down = true;
+                return true;
             }
 
-            // Unlock the bits.
-            mazeImage.UnlockBits(mazeImageData);
-
-            return up || down || left || right;
+            return false;
         }
     }
 }
