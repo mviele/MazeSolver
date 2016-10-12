@@ -52,8 +52,10 @@ namespace MazeSolver
             //White and red nodes
             else
             {
+                Int32 distX = this_x - goal_x;
+                Int32 distY = this_y - goal_y;
                 //heuristic score is the shortest path, regardless of walls, to the finishing node
-                this.score = Math.Abs(this_x - goal_x) + Math.Abs(this_y - goal_y);
+                this.score = (Int32)Math.Sqrt((distX * distX) + (distY * distY));
             }
             visited = false;
         }
